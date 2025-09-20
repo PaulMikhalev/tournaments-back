@@ -6,8 +6,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = "file:./dev.db"
 }
 
 model User {
@@ -35,12 +35,12 @@ model Tournament {
   description       String?
   game              String
   image             String?
-  status            TournamentStatus @default(REGISTRATION)
+  status            String @default("REGISTRATION")
   startDate         DateTime
   endDate           DateTime?
   prizePool         Float    @default(0)
   maxParticipants   Int      @default(16)
-  format            TournamentFormat @default(SINGLE_ELIMINATION)
+  format            String @default("SINGLE_ELIMINATION")
   isPublic          Boolean  @default(true)
   registrationOpen  Boolean  @default(true)
   rules             String?
@@ -61,7 +61,7 @@ model TournamentParticipant {
   tournamentId String
   userId       String
   joinedAt     DateTime @default(now())
-  status       ParticipantStatus @default(REGISTERED)
+  status       String @default("REGISTERED")
 
   // Relations
   tournament   Tournament @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
@@ -80,7 +80,7 @@ model Match {
   player2Id    String?
   player1Score Int?
   player2Score Int?
-  status       MatchStatus @default(SCHEDULED)
+  status       String @default("SCHEDULED")
   scheduledAt  DateTime?
   startedAt    DateTime?
   completedAt  DateTime?
@@ -96,31 +96,3 @@ model Match {
   @@map("matches")
 }
 
-enum TournamentStatus {
-  REGISTRATION
-  UPCOMING
-  LIVE
-  COMPLETED
-  CANCELLED
-}
-
-enum TournamentFormat {
-  SINGLE_ELIMINATION
-  DOUBLE_ELIMINATION
-  ROUND_ROBIN
-  SWISS
-}
-
-enum ParticipantStatus {
-  REGISTERED
-  CONFIRMED
-  DISQUALIFIED
-  WITHDRAWN
-}
-
-enum MatchStatus {
-  SCHEDULED
-  IN_PROGRESS
-  COMPLETED
-  CANCELLED
-}

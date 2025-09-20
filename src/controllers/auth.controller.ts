@@ -40,9 +40,9 @@ export class AuthController {
     }
   }
 
-  me = async (req: RequestWithUser, res: Response): Promise<void> => {
+  me = async (req: Request, res: Response): Promise<void> => {
     try {
-      if (!req.user) {
+      if (!(req as any).user) {
         res.status(401).json({
           success: false,
           error: 'User not authenticated',
@@ -50,7 +50,7 @@ export class AuthController {
         return
       }
 
-      const user = await this.authService.getCurrentUser(req.user.id)
+      const user = await this.authService.getCurrentUser((req as any).user.id)
 
       res.json({
         success: true,

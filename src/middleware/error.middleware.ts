@@ -69,7 +69,7 @@ export const notFoundHandler = (req: Request, res: Response): void => {
 }
 
 export const createError = (message: string, statusCode: number = 500, errors?: Record<string, string[]>): ApiError => {
-  const error = new Error(message) as ApiError
+  const error = new Error(message) as unknown as ApiError
   error.statusCode = statusCode
   error.errors = errors
   return error
