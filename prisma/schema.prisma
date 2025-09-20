@@ -1,0 +1,126 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  username  String   @unique
+  password  String
+  avatar    String?
+  team      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  organizedTournaments Tournament[] @relation("TournamentOrganizer")
+  participations       TournamentParticipant[]
+  matchesAsPlayer1     Match[]      @relation("Player1")
+  matchesAsPlayer2     Match[]      @relation("Player2")
+
+  @@map("users")
+}
+
+model Tournament {
+  id                String   @id @default(cuid())
+  title             String
+  description       String?
+  game              String
+  image             String?
+  status            TournamentStatus @default(REGISTRATION)
+  startDate         DateTime
+  endDate           DateTime?
+  prizePool         Float    @default(0)
+  maxParticipants   Int      @default(16)
+  format            TournamentFormat @default(SINGLE_ELIMINATION)
+  isPublic          Boolean  @default(true)
+  registrationOpen  Boolean  @default(true)
+  rules             String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  // Relations
+  organizerId       String
+  organizer         User     @relation("TournamentOrganizer", fields: [organizerId], references: [id], onDelete: Cascade)
+  participants      TournamentParticipant[]
+  matches           Match[]
+
+  @@map("tournaments")
+}
+
+model TournamentParticipant {
+  id           String   @id @default(cuid())
+  tournamentId String
+  userId       String
+  joinedAt     DateTime @default(now())
+  status       ParticipantStatus @default(REGISTERED)
+
+  // Relations
+  tournament   Tournament @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([tournamentId, userId])
+  @@map("tournament_participants")
+}
+
+model Match {
+  id           String   @id @default(cuid())
+  tournamentId String
+  round        Int
+  matchNumber  Int
+  player1Id    String?
+  player2Id    String?
+  player1Score Int?
+  player2Score Int?
+  status       MatchStatus @default(SCHEDULED)
+  scheduledAt  DateTime?
+  startedAt    DateTime?
+  completedAt  DateTime?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relations
+  tournament   Tournament @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+  player1      User?      @relation("Player1", fields: [player1Id], references: [id])
+  player2      User?      @relation("Player2", fields: [player2Id], references: [id])
+
+  @@unique([tournamentId, round, matchNumber])
+  @@map("matches")
+}
+
+enum TournamentStatus {
+  REGISTRATION
+  UPCOMING
+  LIVE
+  COMPLETED
+  CANCELLED
+}
+
+enum TournamentFormat {
+  SINGLE_ELIMINATION
+  DOUBLE_ELIMINATION
+  ROUND_ROBIN
+  SWISS
+}
+
+enum ParticipantStatus {
+  REGISTERED
+  CONFIRMED
+  DISQUALIFIED
+  WITHDRAWN
+}
+
+enum MatchStatus {
+  SCHEDULED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}

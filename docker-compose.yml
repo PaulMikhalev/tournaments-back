@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: tournaments-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: tournaments_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - tournaments-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: tournaments-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - tournaments-network
+
+  app:
+    build: .
+    container_name: tournaments-backend
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=postgresql://postgres:password@postgres:5432/tournaments_db
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - ./src:/app/src
+      - ./uploads:/app/uploads
+    networks:
+      - tournaments-network
+    command: npm run dev
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  tournaments-network:
+    driver: bridge
