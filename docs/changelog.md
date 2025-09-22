@@ -42,6 +42,18 @@
 ### Добавлено
 - Нет
 
+## [2025-09-22] - Prisma enum-ы и фильтры строк
+### Добавлено
+- Нет
+
+### Изменено
+- В `src/types/tournament.types.ts` заменены прямые импорты enum-ов Prisma на ссылки `Tournament['status']` и `Tournament['format']` для стабильной типизации между версиями Prisma.
+- В `src/services/tournaments.service.ts` удалён `mode: 'insensitive'` из строковых фильтров (`game`, `title`, `description`) для совместимости со схемой (SQLite), соответствуя типу `StringFilter`.
+
+### Исправлено
+- Ошибка компиляции: «Module '@prisma/client' has no exported member 'TournamentStatus'».
+- Ошибка типов: свойство `mode` отсутствует в `StringFilter<"Tournament">`.
+
 ### Изменено
 - В `src/types/api.types.ts` добавлен импорт `Request` из `express` для корректной типизации `RequestWithUser`.
 

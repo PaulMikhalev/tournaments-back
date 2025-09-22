@@ -1,4 +1,4 @@
-import { TournamentStatus, TournamentFormat } from '@prisma/client'
+import type { Tournament } from '@prisma/client'
 
 export interface CreateTournamentRequest {
   title: string
@@ -9,7 +9,7 @@ export interface CreateTournamentRequest {
   endDate?: string
   prizePool?: number
   maxParticipants: number
-  format: TournamentFormat
+  format: Tournament['format']
   isPublic: boolean
   registrationOpen: boolean
   rules?: string
@@ -24,11 +24,11 @@ export interface UpdateTournamentRequest {
   endDate?: string
   prizePool?: number
   maxParticipants?: number
-  format?: TournamentFormat
+  format?: Tournament['format']
   isPublic?: boolean
   registrationOpen?: boolean
   rules?: string
-  status?: TournamentStatus
+  status?: Tournament['status']
 }
 
 export interface TournamentResponse {
@@ -37,13 +37,13 @@ export interface TournamentResponse {
   description?: string
   game: string
   image?: string
-  status: TournamentStatus
+  status: Tournament['status']
   startDate: string
   endDate?: string
   prizePool: number
   maxParticipants: number
   currentParticipants: number
-  format: TournamentFormat
+  format: Tournament['format']
   isPublic: boolean
   registrationOpen: boolean
   rules?: string
@@ -97,9 +97,9 @@ export interface JoinTournamentRequest {
 }
 
 export interface TournamentFilters {
-  status?: TournamentStatus
+  status?: Tournament['status']
   game?: string
-  format?: TournamentFormat
+  format?: Tournament['format']
   isPublic?: boolean
   registrationOpen?: boolean
   page?: number

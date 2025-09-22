@@ -54,14 +54,14 @@ export class TournamentsService {
     
     const where: Prisma.TournamentWhereInput = {
       ...(filters.status && { status: filters.status }),
-      ...(filters.game && { game: { contains: filters.game, mode: 'insensitive' } }),
+      ...(filters.game && { game: { contains: filters.game } }),
       ...(filters.format && { format: filters.format }),
       ...(filters.isPublic !== undefined && { isPublic: filters.isPublic }),
       ...(filters.registrationOpen !== undefined && { registrationOpen: filters.registrationOpen }),
       ...(filters.search && {
         OR: [
-          { title: { contains: filters.search, mode: 'insensitive' } },
-          { description: { contains: filters.search, mode: 'insensitive' } },
+          { title: { contains: filters.search } },
+          { description: { contains: filters.search } },
         ],
       }),
     }

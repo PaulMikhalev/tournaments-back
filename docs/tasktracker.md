@@ -43,4 +43,13 @@
   - [ ] Обновить changelog
 - **Зависимости**: Маршруты и middleware, использующие `RequestWithUser`
 
+## Задача: Устранить ошибки типов Prisma (enum-ы и StringFilter)
+- **Статус**: Завершена
+- **Описание**: Заменены прямые импорты enum-ов Prisma на `Tournament['status']`/`Tournament['format']`. Удалён `mode: 'insensitive'` из строковых фильтров в `TournamentsService` для совместимости с `StringFilter`.
+- **Шаги выполнения**:
+  - [x] Обновлён `src/types/tournament.types.ts`
+  - [x] Обновлён `src/services/tournaments.service.ts`
+  - [x] Проверен линтер — ошибок нет
+- **Зависимости**: `@prisma/client` версия и провайдер БД (SQLite)
+
 
