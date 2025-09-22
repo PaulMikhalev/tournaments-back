@@ -1,9 +1,9 @@
-import jwt from 'jsonwebtoken'
+import jwt, { Secret, SignOptions } from 'jsonwebtoken'
 import { JWTPayload } from '../types/auth.types'
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key'
-const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '7d'
-const JWT_REFRESH_EXPIRES_IN = process.env.JWT_REFRESH_EXPIRES_IN || '30d'
+const JWT_SECRET: Secret = (process.env.JWT_SECRET || 'your-secret-key') as Secret
+const JWT_EXPIRES_IN: SignOptions['expiresIn'] = (process.env.JWT_EXPIRES_IN || '7d') as SignOptions['expiresIn']
+const JWT_REFRESH_EXPIRES_IN: SignOptions['expiresIn'] = (process.env.JWT_REFRESH_EXPIRES_IN || '30d') as SignOptions['expiresIn']
 
 export const generateToken = (payload: Omit<JWTPayload, 'iat' | 'exp'>): string => {
   return jwt.sign(payload, JWT_SECRET, {

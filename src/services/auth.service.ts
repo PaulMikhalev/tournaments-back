@@ -54,7 +54,13 @@ export class AuthService {
       })
 
       return {
-        user,
+        user: {
+          id: user.id,
+          username: user.username,
+          email: user.email,
+          avatar: user.avatar ?? undefined,
+          team: user.team ?? undefined,
+        },
         token,
       }
     } catch (error) {
@@ -94,8 +100,8 @@ export class AuthService {
         id: user.id,
         username: user.username,
         email: user.email,
-        avatar: user.avatar,
-        team: user.team,
+        avatar: user.avatar ?? undefined,
+        team: user.team ?? undefined,
       },
       token,
     }

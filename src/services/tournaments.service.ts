@@ -1,4 +1,4 @@
-import { Prisma, TournamentStatus, TournamentFormat } from '@prisma/client'
+import { Prisma } from '@prisma/client'
 import prisma from '../config/database'
 import { CreateTournamentRequest, UpdateTournamentRequest, TournamentFilters } from '../types/tournament.types'
 import { createError } from '../middleware/error.middleware'

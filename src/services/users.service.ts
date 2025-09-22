@@ -42,8 +42,8 @@ export class UsersService {
       id: user.id,
       username: user.username,
       email: user.email,
-      avatar: user.avatar,
-      team: user.team,
+      avatar: user.avatar ?? undefined,
+      team: user.team ?? undefined,
       createdAt: user.createdAt.toISOString(),
       stats,
     }
@@ -80,8 +80,8 @@ export class UsersService {
       id: user.id,
       username: user.username,
       email: user.email,
-      avatar: user.avatar,
-      team: user.team,
+      avatar: user.avatar ?? undefined,
+      team: user.team ?? undefined,
       createdAt: user.createdAt.toISOString(),
       stats,
     }
@@ -190,9 +190,9 @@ export class UsersService {
 
     const where: Prisma.UserWhereInput = {
       OR: [
-        { username: { contains: query, mode: 'insensitive' } },
-        { email: { contains: query, mode: 'insensitive' } },
-        { team: { contains: query, mode: 'insensitive' } },
+        { username: { contains: query } },
+        { email: { contains: query } },
+        { team: { contains: query } },
       ],
     }
 
@@ -225,8 +225,8 @@ export class UsersService {
       id: user.id,
       username: user.username,
       email: user.email,
-      avatar: user.avatar,
-      team: user.team,
+      avatar: user.avatar ?? undefined,
+      team: user.team ?? undefined,
       createdAt: user.createdAt.toISOString(),
       tournamentCount: user._count.participations,
     }))

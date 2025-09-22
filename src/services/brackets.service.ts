@@ -1,4 +1,4 @@
-import { Prisma, MatchStatus } from '@prisma/client'
+import { Prisma } from '@prisma/client'
 import prisma from '../config/database'
 import { createError } from '../middleware/error.middleware'
 import { generateTournamentBracket } from '../utils/helpers'
@@ -198,8 +198,18 @@ export class BracketsService {
   }
 
   private generateBracketStructure(participants: any[], format: string) {
+    interface BracketMatch {
+      matchNumber: number
+      player1: any | null
+      player2: any | null
+    }
+    interface BracketRound {
+      round: number
+      matches: BracketMatch[]
+    }
+
     const numParticipants = participants.length
-    const bracket = []
+    const bracket: BracketRound[] = []
 
     if (format === 'SINGLE_ELIMINATION') {
       // Calculate number of rounds needed
@@ -210,14 +220,14 @@ export class BracketsService {
       const byes = numParticipants - (firstRoundMatches * 2)
       
       // Create first round matches
-      const firstRound = {
+      const firstRound: BracketRound = {
         round: 1,
         matches: [],
       }
 
       let participantIndex = 0
       for (let i = 0; i < firstRoundMatches; i++) {
-        const match = {
+        const match: BracketMatch = {
           matchNumber: i + 1,
           player1: participants[participantIndex] || null,
           player2: participants[participantIndex + 1] || null,
@@ -229,7 +239,7 @@ export class BracketsService {
       // Add bye matches if needed
       if (byes > 0) {
         for (let i = 0; i < byes; i++) {
-          const match = {
+          const match: BracketMatch = {
             matchNumber: firstRoundMatches + i + 1,
             player1: participants[participantIndex] || null,
             player2: null, // Bye
@@ -245,7 +255,7 @@ export class BracketsService {
       let currentRoundParticipants = Math.ceil(numParticipants / 2)
       for (let round = 2; round <= rounds; round++) {
         const matchesInRound = Math.floor(currentRoundParticipants / 2)
-        const roundData = {
+        const roundData: BracketRound = {
           round,
           matches: [],
         }
