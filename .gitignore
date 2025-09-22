@@ -201,6 +201,7 @@ uploads/
 
 # Prisma
 prisma/migrations/
+prisma/dev.db
 
 # Test files
 coverage/
