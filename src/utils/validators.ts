@@ -34,7 +34,7 @@ export const createTournamentSchema = z.object({
   endDate: z.string().datetime('Invalid end date format').optional(),
   prizePool: z.number().min(0, 'Prize pool must be positive').optional(),
   maxParticipants: z.number().int().min(2, 'Minimum 2 participants').max(128, 'Maximum 128 participants'),
-  format: z.enum(['SINGLE_ELIMINATION', 'DOUBLE_ELIMINATION', 'ROUND_ROBIN', 'SWISS']),
+  format: z.enum(['ELIMINATION', 'SINGLE_ELIMINATION', 'DOUBLE_ELIMINATION', 'ROUND_ROBIN', 'SWISS']),
   isPublic: z.boolean(),
   registrationOpen: z.boolean(),
   rules: z.string().optional(),
@@ -45,7 +45,7 @@ export const updateTournamentSchema = createTournamentSchema.partial()
 export const tournamentFiltersSchema = z.object({
   status: z.enum(['REGISTRATION', 'UPCOMING', 'LIVE', 'COMPLETED', 'CANCELLED']).optional(),
   game: z.string().optional(),
-  format: z.enum(['SINGLE_ELIMINATION', 'DOUBLE_ELIMINATION', 'ROUND_ROBIN', 'SWISS']).optional(),
+  format: z.enum(['ELIMINATION', 'SINGLE_ELIMINATION', 'DOUBLE_ELIMINATION', 'ROUND_ROBIN', 'SWISS']).optional(),
   isPublic: z.boolean().optional(),
   registrationOpen: z.boolean().optional(),
   page: z.coerce.number().int().min(1).optional(),
